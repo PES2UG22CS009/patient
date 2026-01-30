@@ -5,7 +5,7 @@ from src.models.base import TimestampMixin
 
 
 class Patient(Base, TimestampMixin):
-    __tablename__ = "aaryan_patients"
+    __tablename__ = "aaryan_singh_patients"
 
     id: Mapped[int] = mapped_column(primary_key=True)
     first_name: Mapped[str] = mapped_column(String(100), nullable=False)

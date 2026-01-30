@@ -11,17 +11,17 @@ from src.models.base import TimestampMixin
 
 
 class Appointment(Base, TimestampMixin):
-    __tablename__ = "aaryan_appointments"
+    __tablename__ = "aaryan_singh_appointments"
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
     patient_id: Mapped[int] = mapped_column(
-        ForeignKey("aaryan_patients.id", ondelete="RESTRICT"),
+        ForeignKey("aaryan_singh_patients.id", ondelete="RESTRICT"),
         nullable=False,
     )
 
     doctor_id: Mapped[int] = mapped_column(
-        ForeignKey("aaryan_doctors.id", ondelete="RESTRICT"),
+        ForeignKey("aaryan_singh_doctors.id", ondelete="RESTRICT"),
         nullable=False,
     )
 
