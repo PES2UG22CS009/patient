@@ -1,3 +1,8 @@
+import os
+
+# Force test mode BEFORE importing app/database
+os.environ["MEMS_TESTING"] = "1"
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine, event
@@ -7,7 +12,7 @@ from sqlalchemy.pool import StaticPool
 from src.database import Base, get_db
 from src.main import app
 
-# IMPORTANT: Import models so they register with Base.metadata before create_all()
+# Register models before create_all
 import src.models  # noqa: F401
 
 
@@ -16,8 +21,6 @@ TEST_DB_URL = "sqlite+pysqlite:///:memory:"
 
 @pytest.fixture()
 def db_session():
-    # Use StaticPool so the SAME connection is reused.
-    # This is REQUIRED for sqlite in-memory DB tests.
     engine = create_engine(
         TEST_DB_URL,
         future=True,
@@ -25,7 +28,6 @@ def db_session():
         poolclass=StaticPool,
     )
 
-    # Enable SQLite foreign keys
     @event.listens_for(engine, "connect")
     def _set_sqlite_pragma(dbapi_connection, connection_record):
         cursor = dbapi_connection.cursor()
@@ -50,7 +52,6 @@ def db_session():
 
 @pytest.fixture()
 def client(db_session):
-    # Override FastAPI DB dependency to use the SAME SQLite session
     def override_get_db():
         try:
             yield db_session
